@@ -1,0 +1,24 @@
+name: Stage pack downloads
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        type: choice
+        options: ['1','2','3']
+        required: true
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - run: python stage.py "${{ inputs.batch }}"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - uses: actions/deploy-pages@v4
